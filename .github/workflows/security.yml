@@ -34,3 +34,5 @@ jobs:
           fetch-depth: 0           # download the full history, not just the last commit
       - name: Gitleaks
         uses: gitleaks/gitleaks-action@v2
+         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
