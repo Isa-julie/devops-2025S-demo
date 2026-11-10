@@ -1,0 +1,36 @@
+
+name: Security
+
+# Run on every pull request, and allow a manual run from the Actions tab
+on:
+  pull_request:
+  workflow_dispatch:
+
+# The jobs may only read the repo, nothing more
+permissions:
+  contents: read
+
+jobs:
+  code:
+    name: Code scan (Bandit)
+    runs-on: ubuntu-latest
+    continue-on-error: true        # warn for now; Drill 5 sets the threshold
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install bandit
+        run: python -m pip install --upgrade bandit
+      - name: Run bandit
+        run: bandit -r . -f screen
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           # download the full history, not just the last commit
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
