@@ -1,3 +1,4 @@
+
 # This is the "blueprint" for our container registry
 resource "aws_ecr_repository" "devops_repo" {
   # The name for your repository
@@ -9,6 +10,11 @@ resource "aws_ecr_repository" "devops_repo" {
   # This block enables vulnerability scanning when you push an image
   image_scanning_configuration {
     scan_on_push = true
+  }
+
+  # Encrypt the stored images with KMS (AWS managed key, since no key is given)
+  encryption_configuration {
+    encryption_type = "KMS"
   }
 
   # Tags are good practice for organization
